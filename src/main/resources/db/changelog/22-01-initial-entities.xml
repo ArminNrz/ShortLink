@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="1682155646812-1" author="armin">
+        <createTable tableName="address">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_address"/>
+            </column>
+            <column name="real_address" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="short_address" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_used" type="DATETIME"/>
+            <column name="used_count" type="bigint"/>
+            <column name="created" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated" type="DATETIME"/>
+            <column name="customer_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1682155646812-2" author="armin">
+        <createTable tableName="customer">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_customer"/>
+            </column>
+            <column name="phone_number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1682155646812-3" author="armin">
+        <addUniqueConstraint columnNames="short_address" constraintName="uc_address_short_address" tableName="address"/>
+    </changeSet>
+    <changeSet id="1682155646812-4" author="armin">
+        <addUniqueConstraint columnNames="phone_number" constraintName="uc_customer_phone_number" tableName="customer"/>
+    </changeSet>
+
+    <changeSet id="1682155646812-5" author="armin (generated)">
+        <createIndex indexName="address_short_customer_id_idx" tableName="address">
+            <column name="short_address"/>
+            <column name="customer_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="1682155646812-6" author="armin">
+        <createIndex indexName="customer_phone_number_idx" tableName="customer">
+            <column name="phone_number"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="1682155646812-7" author="armin">
+        <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="address"
+                                 constraintName="FK_ADDRESS_ON_CUSTOMER" referencedColumnNames="id"
+                                 referencedTableName="customer"/>
+    </changeSet>
+
+</databaseChangeLog>

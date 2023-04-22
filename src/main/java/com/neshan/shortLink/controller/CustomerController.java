@@ -1,7 +1,8 @@
 package com.neshan.shortLink.controller;
 
 import com.neshan.shortLink.constant.Constant;
-import com.neshan.shortLink.dto.CreateCustomerDTO;
+import com.neshan.shortLink.dto.customer.CustomerCreateDTO;
+import com.neshan.shortLink.dto.customer.CustomerDTO;
 import com.neshan.shortLink.service.entity.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +24,8 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> create(@Valid @RequestBody CreateCustomerDTO createDTO) {
+    public ResponseEntity<CustomerDTO> create(@Valid @RequestBody CustomerCreateDTO createDTO) {
         log.info("REST request to create Customer: {}", createDTO);
-        customerService.create(createDTO);
-        return ResponseEntity.created(URI.create("/customers")).build();
+        return ResponseEntity.created(URI.create("/customers")).body(customerService.create(createDTO));
     }
 }
