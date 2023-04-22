@@ -13,7 +13,7 @@ public class SecurityService {
 
     private final JwtHandler jwtHandler;
 
-    public String getCustomerWithToken(String token) {
+    public String getCustomerPhoneNumberByToken(String token) {
         token = token.substring("Bearer ".length());
         DecodedJWT decodedJWT = jwtHandler.getDecodedJWT(token);
         return decodedJWT.getSubject();

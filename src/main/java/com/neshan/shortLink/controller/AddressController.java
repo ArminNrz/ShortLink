@@ -40,4 +40,15 @@ public class AddressController {
         log.info("REST request to get address with short Address: {}", shortAddress);
         return ResponseEntity.ok().body(shortLinkManagerService.fetch(shortAddress, token));
     }
+
+    @DeleteMapping("/{shortAddress}")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public ResponseEntity<Void> removeShortAddress(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("shortAddress") String shortAddress
+    ) {
+        log.info("REST request to remove short address: {}", shortAddress);
+        shortLinkManagerService.remove(shortAddress, token);
+        return ResponseEntity.noContent().build();
+    }
 }

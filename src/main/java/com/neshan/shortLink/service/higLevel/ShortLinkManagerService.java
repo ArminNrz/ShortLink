@@ -22,9 +22,10 @@ public class ShortLinkManagerService {
     private final SecurityService securityService;
     private final AddressService addressService;
     private final CustomerService customerService;
+
     @Transactional
     public ShortLinkCreateResponseDTO register(String address, String token) {
-        String phoneNumber = securityService.getCustomerWithToken(token);
+        String phoneNumber = securityService.getCustomerPhoneNumberByToken(token);
         CustomerEntity customer = customerService.getByPhoneNumber(phoneNumber);
         int registeredAddressCount = customer.getAddressEntities().size();
         if (registeredAddressCount >= 10) {
@@ -37,10 +38,16 @@ public class ShortLinkManagerService {
 
     @Transactional
     public ShortLinkGetResponseDTO fetch(String shortAddress, String token) {
-        String phoneNumber = securityService.getCustomerWithToken(token);
+        String phoneNumber = securityService.getCustomerPhoneNumberByToken(token);
         AddressEntity addressEntity = addressService.fetchByShortAddress(shortAddress, phoneNumber);
         return ShortLinkGetResponseDTO.builder()
                 .realAddress(addressEntity.getRealAddress())
                 .build();
+    }
+
+    @Transactional
+    public void remove(String shortAddress, String token) {
+        String phoneNumber = securityService.getCustomerPhoneNumberByToken(token);
+        addressService.remove(shortAddress, phoneNumber);
     }
 }
