@@ -1,6 +1,7 @@
 package com.neshan.shortLink.service.entity;
 
-import com.neshan.shortLink.dto.CreateCustomerDTO;
+import com.neshan.shortLink.dto.customer.CustomerCreateDTO;
+import com.neshan.shortLink.dto.customer.CustomerDTO;
 import com.neshan.shortLink.entity.CustomerEntity;
 import com.neshan.shortLink.entity.enumaration.Role;
 import com.neshan.shortLink.mapper.CustomerMapper;
@@ -39,17 +40,18 @@ public class CustomerService implements UserDetailsService {
     }
 
     @Transactional
-    public void create(CreateCustomerDTO createCustomerDTO) {
-        CustomerEntity entity = mapper.toEntity(createCustomerDTO);
-        entity.setPassword(new BCryptPasswordEncoder().encode(createCustomerDTO.getPassword()));
+    public CustomerDTO create(CustomerCreateDTO customerCreateDTO) {
+        CustomerEntity entity = mapper.toEntity(customerCreateDTO);
+        entity.setPassword(new BCryptPasswordEncoder().encode(customerCreateDTO.getPassword()));
 
         try {
             entity = repository.save(entity);
         } catch (DataIntegrityViolationException exception) {
-            log.error("This phone number is iterable, phone number: {}", createCustomerDTO.getPhoneNumber());
+            log.error("This phone number is iterable, phone number: {}", customerCreateDTO.getPhoneNumber());
             throw Problem.valueOf(Status.BAD_REQUEST, "phone number is iterable!");
         }
         log.info("Saved customer: {}", entity);
+        return mapper.toDTO(entity);
     }
 
     public CustomerEntity getByPhoneNumber(String phoneNumber) {
