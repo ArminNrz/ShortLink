@@ -10,6 +10,7 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -20,6 +21,14 @@ public class AddressService {
     private final AddressRepository repository;
 
     public String create(String realAddress, CustomerEntity customerEntity) {
+
+        Optional<AddressEntity> addressOptional = repository.findByRealAddressAndCustomerId(realAddress, customerEntity.getId());
+        if (addressOptional.isPresent()) {
+            log.warn("Real address: {}, is present and short address is: {}", realAddress, addressOptional.get().getShortAddress());
+            this.usedAddressProcess(addressOptional.get());
+            return addressOptional.get().getShortAddress();
+        }
+
         String shortAddress = UUID.randomUUID().toString();
         AddressEntity address = new AddressEntity();
         address.setRealAddress(realAddress);

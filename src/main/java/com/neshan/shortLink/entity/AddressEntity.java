@@ -11,9 +11,15 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "address", indexes = {
-        @Index(name = "address_short_customer_id_idx", columnList = "short_address, customer_id")
-})
+@Table(name = "address",
+        indexes = {
+            @Index(name = "address_short_link_idx", columnList = "short_address"),
+            @Index(name = "address_customer_id_idx", columnList = "real_address, customer_id")
+        },
+        uniqueConstraints = {
+            @UniqueConstraint(name = "address_customer_unique", columnNames = {"real_address", "customer_id"})
+        }
+)
 @Getter
 @Setter
 @ToString

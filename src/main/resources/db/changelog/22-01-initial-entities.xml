@@ -50,20 +50,30 @@
     <changeSet id="1682155646812-4" author="armin">
         <addUniqueConstraint columnNames="phone_number" constraintName="uc_customer_phone_number" tableName="customer"/>
     </changeSet>
+    <changeSet id="1682165504173-1" author="armin">
+        <addUniqueConstraint tableName="address" columnNames="real_address, customer_id"
+                             constraintName="address_customer_unique"/>
+    </changeSet>
 
-    <changeSet id="1682155646812-5" author="armin (generated)">
-        <createIndex indexName="address_short_customer_id_idx" tableName="address">
+
+    <changeSet id="1682155646812-5" author="armin">
+        <createIndex indexName="address_short_link_idx" tableName="address">
             <column name="short_address"/>
-            <column name="customer_id"/>
         </createIndex>
     </changeSet>
     <changeSet id="1682155646812-6" author="armin">
+        <createIndex indexName="address_customer_id_idx" tableName="address">
+            <column name="real_address"/>
+            <column name="customer_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="1682155646812-7" author="armin">
         <createIndex indexName="customer_phone_number_idx" tableName="customer">
             <column name="phone_number"/>
         </createIndex>
     </changeSet>
 
-    <changeSet id="1682155646812-7" author="armin">
+    <changeSet id="1682155646812-8" author="armin">
         <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="address"
                                  constraintName="FK_ADDRESS_ON_CUSTOMER" referencedColumnNames="id"
                                  referencedTableName="customer"/>

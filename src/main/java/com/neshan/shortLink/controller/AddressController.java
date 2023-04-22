@@ -1,6 +1,7 @@
 package com.neshan.shortLink.controller;
 
 import com.neshan.shortLink.constant.Constant;
+import com.neshan.shortLink.dto.address.AddressRegisterDTO;
 import com.neshan.shortLink.dto.address.ShortLinkCreateResponseDTO;
 import com.neshan.shortLink.dto.address.ShortLinkGetResponseDTO;
 import com.neshan.shortLink.service.higLevel.ShortLinkManagerService;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -18,23 +21,23 @@ public class AddressController {
 
     private final ShortLinkManagerService shortLinkManagerService;
 
-    @PostMapping("/{address}")
+    @PostMapping("")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     public ResponseEntity<ShortLinkCreateResponseDTO> registerShortLink(
-            @PathVariable("address") String address,
+            @Valid @RequestBody AddressRegisterDTO registerDTO,
             @RequestHeader("Authorization") String token
     ) {
-        log.info("REST request to register address: {}", address);
-        return ResponseEntity.ok().body(shortLinkManagerService.register(address, token));
+        log.info("REST request to register address: {}", registerDTO.getRealAddress());
+        return ResponseEntity.ok().body(shortLinkManagerService.register(registerDTO.getRealAddress(), token));
     }
 
-    @GetMapping("/{shortLink}")
+    @GetMapping("/{shortAddress}")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     public ResponseEntity<ShortLinkGetResponseDTO> getRealAddress(
             @RequestHeader("Authorization") String token,
-            @PathVariable("shortLink") String shortLink
+            @PathVariable("shortAddress") String shortAddress
     ) {
-        log.info("REST request to get address with short link: {}", shortLink);
-        return ResponseEntity.ok().body(shortLinkManagerService.fetch(shortLink, token));
+        log.info("REST request to get address with short Address: {}", shortAddress);
+        return ResponseEntity.ok().body(shortLinkManagerService.fetch(shortAddress, token));
     }
 }
