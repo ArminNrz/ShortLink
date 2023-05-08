@@ -20,6 +20,11 @@ spring:
 
 neshan:
   secret: secreTkjh15H7uJhgSHOP0plFkjtuwerqJm5Oop7wWwlkHQasY
+  scheduler:
+    remove-link:
+      enable: true
+      cron: 0 0 23 * * *
+      page-size: 10
 
 logging:
   level:
