@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+  shop:
+    image: shortLink:latest
+    container_name: shortLink
+    depends_on:
+      - mysql-server
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-server:3306/shop?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=Pass
+    ports:
+      - "8081:8081"
+
+  mysql-server:
+    build:
+      context: .
+    image: mysql:8.0
+    restart: unless-stopped
+    container_name: mysql-server
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=Pass

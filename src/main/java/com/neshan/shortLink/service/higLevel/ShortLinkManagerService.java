@@ -1,9 +1,11 @@
 package com.neshan.shortLink.service.higLevel;
 
+import com.neshan.shortLink.dto.address.AddressStaticDTO;
 import com.neshan.shortLink.dto.address.ShortLinkCreateResponseDTO;
 import com.neshan.shortLink.dto.address.ShortLinkGetResponseDTO;
 import com.neshan.shortLink.entity.AddressEntity;
 import com.neshan.shortLink.entity.CustomerEntity;
+import com.neshan.shortLink.mapper.AddressMapper;
 import com.neshan.shortLink.service.entity.AddressService;
 import com.neshan.shortLink.service.entity.CustomerService;
 import com.neshan.shortLink.service.lowLevel.SecurityService;
@@ -22,6 +24,7 @@ public class ShortLinkManagerService {
     private final SecurityService securityService;
     private final AddressService addressService;
     private final CustomerService customerService;
+    private final AddressMapper addressMapper;
 
     @Transactional
     public ShortLinkCreateResponseDTO register(String address, String token) {
@@ -49,5 +52,11 @@ public class ShortLinkManagerService {
     public void remove(String shortAddress, String token) {
         String phoneNumber = securityService.getCustomerPhoneNumberByToken(token);
         addressService.remove(shortAddress, phoneNumber);
+    }
+
+    public AddressStaticDTO getStatic(String shortAddress, String token) {
+        String phoneNumber = securityService.getCustomerPhoneNumberByToken(token);
+        AddressEntity entity = addressService.fetchByShortAddress(shortAddress, phoneNumber);
+        return addressMapper.toStaticDTO(entity);
     }
 }

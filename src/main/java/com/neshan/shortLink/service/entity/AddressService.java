@@ -5,6 +5,8 @@ import com.neshan.shortLink.entity.CustomerEntity;
 import com.neshan.shortLink.repository.AddressRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
@@ -56,5 +58,15 @@ public class AddressService {
     public void remove(String shortAddress, String phoneNumber) {
         repository.deleteByShortAddressAndCustomerPhoneNumber(shortAddress, phoneNumber);
         log.info("Remove address record with short address: {}, customer phone number: {}", shortAddress, phoneNumber);
+    }
+
+    public Slice<AddressEntity> getSlice(Pageable pageable) {
+        log.debug("Try to fetch address entities with page: {}", pageable);
+        return repository.findAll(pageable);
+    }
+
+    public void remove(AddressEntity entity) {
+        repository.delete(entity);
+        log.info("Remove address entity: {}", entity);
     }
 }

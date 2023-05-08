@@ -51,4 +51,14 @@ public class AddressController {
         shortLinkManagerService.remove(shortAddress, token);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/static/{shortAddress}")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public ResponseEntity<?> getAddressStatic(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("shortAddress") String shortAddress
+    ) {
+        log.info("REST request to get short address: {}, static", shortAddress);
+        return ResponseEntity.ok().body(shortLinkManagerService.getStatic(shortAddress, token));
+    }
 }
