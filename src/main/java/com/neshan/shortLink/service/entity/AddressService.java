@@ -39,7 +39,7 @@ public class AddressService {
     }
 
     public AddressEntity fetchByShortAddress(String shortAddress, String customerPhoneNumber) {
-        AddressEntity foundEntity = repository.getAddressEntitiesByShortAddressAndCustomerPhoneNumber(shortAddress, customerPhoneNumber)
+        AddressEntity foundEntity = repository.findByShortAddressAndCustomerPhoneNumber(shortAddress, customerPhoneNumber)
                 .orElseThrow(() -> Problem.valueOf(Status.BAD_REQUEST, "No such link exist!"));
         log.info("Found with short address: {}, phoneNumber: {}, address: {}", shortAddress, customerPhoneNumber, foundEntity);
         this.usedAddressProcess(foundEntity);
@@ -51,5 +51,10 @@ public class AddressService {
         address.setLastUsed(ZonedDateTime.now());
         repository.save(address);
         log.info("Update address last used to: {}, used count to: {}", address.getLastUsed(), address.getUsedCount());
+    }
+
+    public void remove(String shortAddress, String phoneNumber) {
+        repository.deleteByShortAddressAndCustomerPhoneNumber(shortAddress, phoneNumber);
+        log.info("Remove address record with short address: {}, customer phone number: {}", shortAddress, phoneNumber);
     }
 }
