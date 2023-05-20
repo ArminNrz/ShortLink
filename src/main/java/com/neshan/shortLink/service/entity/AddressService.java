@@ -40,11 +40,12 @@ public class AddressService {
         return shortAddress;
     }
 
-    public AddressEntity fetchByShortAddress(String shortAddress, String customerPhoneNumber) {
+    public AddressEntity fetchByShortAddress(String shortAddress, String customerPhoneNumber, boolean isStatic) {
         AddressEntity foundEntity = repository.findByShortAddressAndCustomerPhoneNumber(shortAddress, customerPhoneNumber)
                 .orElseThrow(() -> Problem.valueOf(Status.BAD_REQUEST, "No such link exist!"));
         log.info("Found with short address: {}, phoneNumber: {}, address: {}", shortAddress, customerPhoneNumber, foundEntity);
-        this.usedAddressProcess(foundEntity);
+        if (!isStatic)
+            this.usedAddressProcess(foundEntity);
         return foundEntity;
     }
 

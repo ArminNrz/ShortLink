@@ -42,7 +42,7 @@ public class ShortLinkManagerService {
     @Transactional
     public ShortLinkGetResponseDTO fetch(String shortAddress, String token) {
         String phoneNumber = securityService.getCustomerPhoneNumberByToken(token);
-        AddressEntity addressEntity = addressService.fetchByShortAddress(shortAddress, phoneNumber);
+        AddressEntity addressEntity = addressService.fetchByShortAddress(shortAddress, phoneNumber, false);
         return ShortLinkGetResponseDTO.builder()
                 .realAddress(addressEntity.getRealAddress())
                 .build();
@@ -56,7 +56,7 @@ public class ShortLinkManagerService {
 
     public AddressStaticDTO getStatic(String shortAddress, String token) {
         String phoneNumber = securityService.getCustomerPhoneNumberByToken(token);
-        AddressEntity entity = addressService.fetchByShortAddress(shortAddress, phoneNumber);
+        AddressEntity entity = addressService.fetchByShortAddress(shortAddress, phoneNumber, true);
         return addressMapper.toStaticDTO(entity);
     }
 }
